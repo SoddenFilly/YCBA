@@ -15,9 +15,9 @@ import random
 
 import json
 
-from YCB_webScrape import STATIC
-from YCB_webScrape import ListProcessing
-# from YCB_RR import STATIC
+from YCBA_webScrape import STATIC
+from YCBA_webScrape import ListProcessing
+# from YCBA_RR import STATIC
 
 # def run():
 #     for i in range(10):

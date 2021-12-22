@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="icons">
-    <file>icon_stats.png</file>
-    <file>icon_christmasPresent.png</file>
-  </qresource>
-</RCC>

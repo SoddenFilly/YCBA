@@ -4,7 +4,7 @@
 block_cipher = None
 
 
-a = Analysis(['Y.C.B.py'],
+a = Analysis(['Y.C.B.A.py'],
              pathex=[],
              binaries=[],
              datas=[],
@@ -26,7 +26,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,  
           [],
-          name='Y.C.B',
+          name='Y.C.B.A',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,

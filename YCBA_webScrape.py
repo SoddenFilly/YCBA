@@ -3,15 +3,11 @@ from pynput.keyboard import Key, Controller as Controller_keyboard
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
 from bs4 import BeautifulSoup as Bsoup
 
 import random
 import time
-
 import os
-
-keyboard = Controller_keyboard()
 
 def FillText(text, typeSpeed, submitDelay):
 
@@ -97,31 +93,24 @@ def ListProcessing(subj, skips):
     return subj_temp
 
 def STATIC():
+
+    keyboard = Controller_keyboard()
     
     workingDir = os.getcwd()
     print(workingDir)
     webdriverDir = f"{workingDir}\\tools\\chromedriver.exe"
     print(webdriverDir)
     driver = DriverInst(webdriverDir)
-    # driver = DriverInst(r"C:\Users\aidan\Dev_Files\Python\Projects\jay\chromedriver.exe")
 
-    channels = ["EddievanderMeer", "monoman", "PaulDavids", "AKSTARENG", "SteveTerreberry", "PirateCrabUK", "CharlesBerthoud"]
-        
+    defaultChannels = ["EddievanderMeer", "monoman", "PaulDavids", "AKSTARENG", "SteveTerreberry", "PirateCrabUK", "CharlesBerthoud"]
 
-    # CompileVideoLinks("SteveTerreberry", driver)
     globalLinks = []
-    for channel in channels:
+    for channel in defaultChannels:
         try:
             globalLinks.extend(CompileVideoLinks(channel, driver))
-            print(globalLinks)
-            print("Len:", len(globalLinks))
         except Exception as err: 
             print(f"\n\n{err}\n\n")
 
-    # ListProcessing(globalLinks)
-
-    print("\n\nEND_END\n\n")
-    time.sleep(5)
     driver.quit()
 
     return globalLinks

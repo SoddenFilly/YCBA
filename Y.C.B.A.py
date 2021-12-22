@@ -1,28 +1,21 @@
 import win32gui, win32con
 
-hide = win32gui.GetForegroundWindow()
-win32gui.ShowWindow(hide, win32con.SW_HIDE)
+# hide = win32gui.GetForegroundWindow()
+# win32gui.ShowWindow(hide, win32con.SW_HIDE)
 
 from PyQt5.QtWidgets import * 
 from PyQt5 import QtCore, QtGui, uic, QtTest
 from PyQt5.QtGui import * 
 from PyQt5.QtCore import * 
+
 import sys
 import time
-# import os
-
 import random
-
 import json
 
 from YCBA_webScrape import STATIC
 from YCBA_webScrape import ListProcessing
 # from YCBA_RR import STATIC
-
-# def run():
-#     for i in range(10):
-#         print(i)
-
 
 class Animate:
     def __init__(self):
@@ -64,15 +57,9 @@ class Animate:
             self.anim.setStartValue(target)
             Animate.animate(self, start, duration)
 
-    pass
-
-
-
 def jsonStore(location, data):
-    with open(location, 'w') as file:  #open the file in write mode
-        json.dump(data, file)   # json.dump() function to stores the set of numbers in numbers.json file
-
-
+    with open(location, 'w') as file:
+        json.dump(data, file)
 
 class UI(QMainWindow):
     def __init__(self):
@@ -84,9 +71,7 @@ class UI(QMainWindow):
         self.show()
 
         uic.loadUi("resources/splash.ui", self)
-
         # self.creditLabel.clicked.connect(STATIC())
-
         self.anim_loading()
 
         uic.loadUi("resources/splashToMenu.ui", self)
@@ -122,7 +107,6 @@ class UI(QMainWindow):
         jsonStore("vLinks_all.json", videoLinks)
         videoLinks = ListProcessing(videoLinks, 3)
         jsonStore("vLinks.json", videoLinks)
-
     
     def click_btnExe(self):
         Animate.opacity(self, 1, 0.8, 70, self.btnExe, True)
@@ -154,29 +138,6 @@ class UI(QMainWindow):
             except:
                 pass
 
-        # app=QApplication(sys.argv)
-        # UIWindow = UI()
-        # app.exec_()
-
-        # time.sleep(5)
-        # print("dddd")
-        # uic.loadUi("resources/splash_89.ui", self)
-        
-#         # self.browse.clicked.connect(self.browsefiles)
-
 app=QApplication(sys.argv)
 UIWindow = UI()
 app.exec_()
-# print("end")
-#     # def browsefiles(self):
-#     #     fname=QFileDialog.getOpenFileName(self, 'Open file', 'D:\codefirst.io\PyQt5 tutorials\Browse Files', 'Images (*.png, *.xmp *.jpg)')
-#     #     self.filename.setText(fname[0])
-
-
-# mainwindow=QMainWindow()
-# widget=QtWidgets.QStackedWidget() 
-# widget.addWidget(mainwindow)
-# widget.setFixedWidth(680)
-# widget.setFixedHeight(400)
-# widget.show()
-# sys.exit(app.exec_())

@@ -61,6 +61,16 @@ def jsonStore(location, data):
     with open(location, 'w') as file:
         json.dump(data, file)
 
+def get_channelNames():
+    channel_list = ["EddievanderMeer", "monoman", "PaulDavids"]#, "AKSTARENG", "SteveTerreberry", "PirateCrabUK", "CharlesBerthoud"]
+
+    # channel_list = "".join(channel_list)
+    string = ""
+    for ch in channel_list:
+        string = string + ",\n" + ch
+        print(string)
+    return string[2:]
+
 class UI(QMainWindow):
     def __init__(self):
         super(UI,self).__init__()
@@ -70,12 +80,12 @@ class UI(QMainWindow):
 
         self.show()
 
-        uic.loadUi("resources/splash.ui", self)
-        # self.creditLabel.clicked.connect(STATIC())
-        self.anim_loading()
+        # uic.loadUi("resources/splash.ui", self)
+        # # self.creditLabel.clicked.connect(STATIC())
+        # self.anim_loading()
 
-        uic.loadUi("resources/splashToMenu.ui", self)
-        Animate.position(self, QPoint(0, -20), 3000, self.titleLabel)
+        # uic.loadUi("resources/splashToMenu.ui", self)
+        # Animate.position(self, QPoint(0, -20), 3000, self.titleLabel)
 
         uic.loadUi("resources/menu.ui", self)
         self.btnManage.setStyleSheet("QPushButton { background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 0), stop:1 rgba(23, 17, 80, 0)); border-radius: 20px; color: rgb(123, 105, 213, 0); }")
@@ -99,18 +109,44 @@ class UI(QMainWindow):
 
     def click_btnManage(self):
         Animate.opacity(self, 1, 0.8, 70, self.btnManage, True)
-        STATIC()
+        uic.loadUi("resources/ManageChannels.ui", self)
+
+        self.ChannelList.setPlainText(get_channelNames())
+        self.btnReturn.clicked.connect(self.click_btnReturn)
+
+        self.fieldChannel.textChanged.connect(self.checkIfChannelExists)
+
+    
+    def checkIfChannelExists(self):
+        print("Checking...")
+        # print(self.fieldChannel.text())
+        isValid = STATIC(channelList=[self.fieldChannel.text()], getVids=False, validateChannel=True)
+        # print(isValid)
+        if isValid == False:
+            self.labelError.setText("This channel name is not Valid")
+            self.labelError.setStyleSheet("color: rgb(255, 0, 80);")
+        else:
+            self.labelError.setText("This channel name is Valid")
+            self.labelError.setStyleSheet("color: rgb(0, 255, 100);")
+
+    def click_btnReturn(self):
+        # Animate.opacity(self, 1, 0.8, 70, self.btnManage, True)
+        uic.loadUi("resources/menu.ui", self)
+
+        self.btnManage.clicked.connect(self.click_btnManage)
+        self.btnGet.clicked.connect(self.click_btnGet)
+        self.btnExe.clicked.connect(self.click_btnExe)
 
     def click_btnGet(self):
         Animate.opacity(self, 1, 0.8, 70, self.btnGet, True)
-        videoLinks = STATIC()
+        videoLinks = STATIC(getVids=True, validateChannel=False)
         jsonStore("vLinks_all.json", videoLinks)
         videoLinks = ListProcessing(videoLinks, 3)
         jsonStore("vLinks.json", videoLinks)
     
     def click_btnExe(self):
         Animate.opacity(self, 1, 0.8, 70, self.btnExe, True)
-        STATIC()
+        STATIC(getVids=True, validateChannel=False)
     
     def anim_loading(self):
 
@@ -138,6 +174,8 @@ class UI(QMainWindow):
             except:
                 pass
 
-app=QApplication(sys.argv)
-UIWindow = UI()
-app.exec_()
+if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+    UIWindow = UI()
+    app.exec_()

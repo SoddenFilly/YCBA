@@ -85,6 +85,21 @@ background-color: qradialgradient(spread:pad, cx:0.495, cy:0.5, radius:1.797, fx
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
+       <widget class="QPushButton" name="btnSecret">
+        <property name="geometry">
+         <rect>
+          <x>480</x>
+          <y>350</y>
+          <width>151</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(96, 75, 150);
+border-radius: 2px;
+background-color: rgb(0,0,0,0);</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QPushButton" name="btnManage">
        <property name="geometry">
@@ -226,10 +241,10 @@ color: rgb(123, 105, 213);</string>
       <widget class="QLabel" name="creditLabel">
        <property name="geometry">
         <rect>
-         <x>480</x>
-         <y>351</y>
-         <width>151</width>
-         <height>20</height>
+         <x>460</x>
+         <y>340</y>
+         <width>191</width>
+         <height>41</height>
         </rect>
        </property>
        <property name="font">
@@ -242,10 +257,7 @@ color: rgb(123, 105, 213);</string>
         <enum>Qt::LeftToRight</enum>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: rgb(96, 75, 150);
-QLabel::hover {
-   background-color:white;
-}</string>
+        <string notr="true">color: rgb(96, 75, 150);</string>
        </property>
        <property name="text">
         <string>&lt;i&gt;&lt;u&gt;A program by Piccolo Babish</string>
@@ -279,21 +291,6 @@ QLabel::hover {
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnSecret">
-       <property name="geometry">
-        <rect>
-         <x>480</x>
-         <y>355</y>
-         <width>151</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color: rgb(96, 75, 150);
-border-radius: 2px;
-background-color: rgb(0,0,0,0);</string>
-       </property>
-      </widget>
       <zorder>frame_2</zorder>
       <zorder>titleLabel</zorder>
       <zorder>btnManage</zorder>
@@ -303,7 +300,6 @@ background-color: rgb(0,0,0,0);</string>
       <zorder>btnManage_3</zorder>
       <zorder>creditLabel</zorder>
       <zorder>label</zorder>
-      <zorder>btnSecret</zorder>
      </widget>
     </item>
    </layout>

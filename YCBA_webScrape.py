@@ -100,7 +100,7 @@ def ListProcessing(subj, skips):
     # print(len(subj_temp))
     return subj_temp
 
-def STATIC(getVids, validateChannel, channelList= ["a"]):
+def STATIC(getVids=False, validateChannel=False, channelList=["a"], secret=False):
 
     keyboard = Controller_keyboard()
     
@@ -139,6 +139,12 @@ def STATIC(getVids, validateChannel, channelList= ["a"]):
                 return False
         
         return True
+    
+    elif secret == True:
+        driver = DriverInst(webdriverDir, False)
+
+        driver.get(f"https://youtu.be/dQw4w9WgXcQ")
+
 
 
 if __name__ == "__main__":

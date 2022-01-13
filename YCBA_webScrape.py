@@ -3,15 +3,12 @@ from pynput.keyboard import Key, Controller as Controller_keyboard
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup as Bsoup
 
 import random
 import time
-
 import os
-
-keyboard = Controller_keyboard()
 
 def FillText(text, typeSpeed, submitDelay):
 
@@ -41,16 +38,23 @@ def FillText(text, typeSpeed, submitDelay):
     keyboard.release(Key.enter)
 # FillText("", 0.001, 0.2)
 
-def DriverInst(webdriverDir):
-    driver = webdriver.Chrome(webdriverDir)
-    # driver = webdriver.Chrome(r"\chromedriver.exe")
-    driver.maximize_window() # For maximizing window
-    driver.implicitly_wait(20)
+def DriverInst(webdriverDir, headless):
+    if headless == True:
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--window-size=1920x1080")
+
+        driver = webdriver.Chrome(executable_path=webdriverDir, chrome_options=chrome_options)
+    
+    else:
+        driver = webdriver.Chrome(executable_path=webdriverDir)
+        driver.maximize_window() # For maximizing window
+        driver.implicitly_wait(20)
+
     return driver
 
-def CompileVideoLinks(channel, driver):
+def CompileVideoLinks(channel, driver, keyboard):
 
-    
     driver.get(f"https://www.youtube.com/c/{channel}/videos")
 
     time.sleep(1)
@@ -79,7 +83,7 @@ def CompileVideoLinks(channel, driver):
             link = e.get_attribute('href')
             if link != None:
                 localLinks.append(link)
-        print(len(localLinks))
+        # print(len(localLinks))
 
     time.sleep(2)
 
@@ -96,36 +100,47 @@ def ListProcessing(subj, skips):
     # print(len(subj_temp))
     return subj_temp
 
-def STATIC():
+def STATIC(getVids, validateChannel, channelList= ["a"]):
+
+    keyboard = Controller_keyboard()
     
     workingDir = os.getcwd()
-    print(workingDir)
+    # print(workingDir)
     webdriverDir = f"{workingDir}\\tools\\chromedriver.exe"
-    print(webdriverDir)
-    driver = DriverInst(webdriverDir)
-    # driver = DriverInst(r"C:\Users\aidan\Dev_Files\Python\Projects\jay\chromedriver.exe")
+    # print(webdriverDir)
 
-    channels = ["EddievanderMeer", "monoman", "PaulDavids", "AKSTARENG", "SteveTerreberry", "PirateCrabUK", "CharlesBerthoud"]
+    if getVids == True:
+        driver = DriverInst(webdriverDir, False)
+
+        defaultChannels = ["EddievanderMeer", "monoman"]#, "PaulDavids", "AKSTARENG", "SteveTerreberry", "PirateCrabUK", "CharlesBerthoud"]
+
+        globalLinks = []
+        for channel in defaultChannels:
+            try:
+                globalLinks.extend(CompileVideoLinks(channel, driver, keyboard))
+            except Exception as err: 
+                print(f"\n\n{err}\n\n")
+
+        driver.quit()
+
+        return globalLinks
+
+    elif validateChannel == True:
+        driver = DriverInst(webdriverDir, True)
+
+        driver.get(f"https://www.youtube.com/c/{channelList[0]}/videos")
+
+        time.sleep(1)
         
+        if driver.title == "404 Not Found":
+            driver.get(f"https://www.youtube.com/user/{channelList[0]}/videos")
+            time.sleep(1)
+            if driver.title == "404 Not Found":
+                return False
+        
+        return True
 
-    # CompileVideoLinks("SteveTerreberry", driver)
-    globalLinks = []
-    for channel in channels:
-        try:
-            globalLinks.extend(CompileVideoLinks(channel, driver))
-            print(globalLinks)
-            print("Len:", len(globalLinks))
-        except Exception as err: 
-            print(f"\n\n{err}\n\n")
-
-    # ListProcessing(globalLinks)
-
-    print("\n\nEND_END\n\n")
-    time.sleep(5)
-    driver.quit()
-
-    return globalLinks
 
 if __name__ == "__main__":
 
-    links = STATIC()
+    links = STATIC(False, True)

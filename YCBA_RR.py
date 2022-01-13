@@ -3,17 +3,15 @@ from pynput.keyboard import Key, Controller as Controller_keyboard
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
 from bs4 import BeautifulSoup as Bsoup
 
 import random
 import time
-
 import os
 
 def DriverInst(webdriverDir):
+    
     driver = webdriver.Chrome(webdriverDir)
-    # driver = webdriver.Chrome(r"\chromedriver.exe")
     driver.maximize_window() # For maximizing window
     driver.implicitly_wait(20)
     return driver

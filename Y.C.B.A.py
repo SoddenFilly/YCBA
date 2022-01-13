@@ -1,7 +1,7 @@
 import win32gui, win32con
 
-# hide = win32gui.GetForegroundWindow()
-# win32gui.ShowWindow(hide, win32con.SW_HIDE)
+hide = win32gui.GetForegroundWindow()
+win32gui.ShowWindow(hide, win32con.SW_HIDE)
 
 from PyQt5.QtWidgets import * 
 from PyQt5 import QtCore, QtGui, uic, QtTest
@@ -80,12 +80,12 @@ class UI(QMainWindow):
 
         self.show()
 
-        # uic.loadUi("resources/splash.ui", self)
-        # # self.creditLabel.clicked.connect(STATIC())
-        # self.anim_loading()
+        uic.loadUi("resources/splash.ui", self)
+        # self.creditLabel.clicked.connect(STATIC())
+        self.anim_loading()
 
-        # uic.loadUi("resources/splashToMenu.ui", self)
-        # Animate.position(self, QPoint(0, -20), 3000, self.titleLabel)
+        uic.loadUi("resources/splashToMenu.ui", self)
+        Animate.position(self, QPoint(0, -20), 3000, self.titleLabel)
 
         uic.loadUi("resources/menu.ui", self)
         self.btnManage.setStyleSheet("QPushButton { background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 0), stop:1 rgba(23, 17, 80, 0)); border-radius: 20px; color: rgb(123, 105, 213, 0); }")

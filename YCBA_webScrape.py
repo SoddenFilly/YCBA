@@ -55,39 +55,50 @@ def DriverInst(webdriverDir, headless):
 
 def CompileVideoLinks(channel, driver, keyboard):
 
-    driver.get(f"https://www.youtube.com/c/{channel}/videos")
+    try:
+        driver.get(f"https://www.youtube.com/c/{channel}/videos")
 
-    time.sleep(1)
-    
-    if driver.title == "404 Not Found":
-        driver.get(f"https://www.youtube.com/user/{channel}/videos")
         time.sleep(1)
+        
         if driver.title == "404 Not Found":
-            return
-
-    localLinks = []
-    while True:
-
-        keyboard.press(Key.end)
-        keyboard.release(Key.end)
-        time.sleep(1)
-        # print("eh")
-        # container = driver.find_element_by_id("items")
-        elements = driver.find_elements_by_id("thumbnail")
-        if len(elements)-1 == len(localLinks):
-            print("\nEND\n")
-            break
+            driver.get(f"https://www.youtube.com/user/{channel}/videos")
+            time.sleep(1)
+            if driver.title == "404 Not Found":
+                return
 
         localLinks = []
-        for e in elements:
-            link = e.get_attribute('href')
-            if link != None:
-                localLinks.append(link)
-        # print(len(localLinks))
+        while True:
 
-    time.sleep(2)
+            keyboard.press(Key.end)
+            keyboard.release(Key.end)
+            time.sleep(1)
+            # print("eh")
+            # container = driver.find_element_by_id("items")
+            try:
+                elements = driver.find_elements_by_id("thumbnail")
+                if len(elements)-1 == len(localLinks):
+                    print("\nEND\n")
+                    break
 
-    return localLinks
+                localLinks = []
+                for e in elements:
+                    link = e.get_attribute('href')
+                    if link != None:
+                        localLinks.append(link)
+                # print(len(localLinks))
+            except Exception as e:
+                print("exection-b:", e)
+                quit("QUIT")
+                return -1
+
+        time.sleep(2)
+
+        return localLinks
+    
+    except Exception as e:
+        print("exeption-a:", e)
+        quit("QUIT")
+        return -1
 
 def ListProcessing(subj, skips):
     # print(subj)
@@ -100,27 +111,30 @@ def ListProcessing(subj, skips):
     # print(len(subj_temp))
     return subj_temp
 
-def STATIC(getVids, validateChannel, channelList= ["a"]):
+def STATIC(getVids=False, validateChannel=False, channelList=["monoman"], secret=False):
 
     keyboard = Controller_keyboard()
     
-    workingDir = os.getcwd()
-    # print(workingDir)
-    webdriverDir = f"{workingDir}\\tools\\chromedriver.exe"
-    # print(webdriverDir)
+    # fileLocationPath = os.path.dirname(os.path.realpath(__file__))
+    fileLocationPath = os.getcwd()
+
+    webdriverDir = f"{fileLocationPath}\\tools\\chromedriver.exe"
 
     if getVids == True:
         driver = DriverInst(webdriverDir, False)
 
-        defaultChannels = ["EddievanderMeer", "monoman"]#, "PaulDavids", "AKSTARENG", "SteveTerreberry", "PirateCrabUK", "CharlesBerthoud"]
+        # defaultChannels = ["EddievanderMeer", "monoman"]#, "PaulDavids", "AKSTARENG", "SteveTerreberry", "PirateCrabUK", "CharlesBerthoud"]
 
         globalLinks = []
-        for channel in defaultChannels:
+        for channel in channelList:
             try:
                 globalLinks.extend(CompileVideoLinks(channel, driver, keyboard))
             except Exception as err: 
-                print(f"\n\n{err}\n\n")
+                print(f"\nERROR-MESSAGE:\n{err}\n\n")
 
+            if -1 in globalLinks:
+                return -1
+                
         driver.quit()
 
         return globalLinks
@@ -139,6 +153,12 @@ def STATIC(getVids, validateChannel, channelList= ["a"]):
                 return False
         
         return True
+    
+    elif secret == True:
+        driver = DriverInst(webdriverDir, False)
+
+        driver.get(f"https://youtu.be/dQw4w9WgXcQ")
+
 
 
 if __name__ == "__main__":

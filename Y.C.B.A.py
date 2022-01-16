@@ -12,6 +12,7 @@ import sys
 import time
 import random
 import json
+import os
 
 from YCBA_webScrape import STATIC
 from YCBA_webScrape import ListProcessing
@@ -81,14 +82,24 @@ class UI(QMainWindow):
 
         self.show()
 
+        self.fileLocationPath = os.path.dirname(os.path.realpath(__file__))
+
+        # uic.loadUi(self.fileLocationPath+"/resources/splash.ui", self)
         uic.loadUi("resources/splash.ui", self)
-        # self.creditLabel.clicked.connect(STATIC())
+        self.btnQuitProg.clicked.connect(self.click_btnQuitProg)
+        self.btnSecret.clicked.connect(self.click_btnSecret)
         self.anim_loading()
 
+        # uic.loadUi(self.fileLocationPath+"/resources/splashToMenu.ui", self)
         uic.loadUi("resources/splashToMenu.ui", self)
+        self.btnQuitProg.clicked.connect(self.click_btnQuitProg)
+        self.btnSecret.clicked.connect(self.click_btnSecret)
         Animate.position(self, QPoint(0, -20), 3000, self.titleLabel)
 
+        # uic.loadUi(self.fileLocationPath+"/resources/menu.ui", self)
         uic.loadUi("resources/menu.ui", self)
+        self.btnQuitProg.clicked.connect(self.click_btnQuitProg)
+        self.btnSecret.clicked.connect(self.click_btnSecret)
         self.btnManage.setStyleSheet("QPushButton { background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 0), stop:1 rgba(23, 17, 80, 0)); border-radius: 20px; color: rgb(123, 105, 213, 0); }")
         self.btnGet.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 0), stop:1 rgba(23, 17, 80, 0)); border-radius: 20px; color: rgb(123, 105, 213, 0);")
         self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 0), stop:1 rgba(23, 17, 80, 0)); border-radius: 20px; color: rgb(123, 105, 213, 0);")
@@ -97,19 +108,34 @@ class UI(QMainWindow):
             Animate.opacity(self, w, 0, 0, 0, False)
 
         self.btnManage.setStyleSheet("QPushButton { background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 255), stop:1 rgba(23, 17, 80, 255)); border-radius: 20px; color: rgb(123, 105, 213); }")
-        self.btnGet.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 255), stop:1 rgba(23, 17, 80, 255)); border-radius: 20px; color: rgb(123, 105, 213);")
-        self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 255), stop:1 rgba(23, 17, 80, 255)); border-radius: 20px; color: rgb(123, 105, 213);")
-
         Animate.opacity(self, self.btnManage, 0, 1, 500, False)
+
+        self.btnGet.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 255), stop:1 rgba(23, 17, 80, 255)); border-radius: 20px; color: rgb(123, 105, 213);")
         Animate.opacity(self, self.btnGet, 0, 1, 500, False)
+        
+        # # self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 255), stop:1 rgba(23, 17, 80, 255)); border-radius: 20px; color: rgb(123, 105, 213);")
+        # self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 100), stop:1 rgba(23, 17, 80, 100)); border-radius: 20px; color: rgb(123, 105, 213, 100);")
+        # if os.path.isfile(self.fileLocationPath+"/vLinks_targeted.json") == False:
+        if os.path.isfile("data/vLinks_targeted.json") == False:
+            self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 100), stop:1 rgba(23, 17, 80, 100)); border-radius: 20px; color: rgb(123, 105, 213, 100);")
+        else:
+            self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189), stop:1 rgba(23, 17, 80)); border-radius: 20px; color: rgb(123, 105, 213);")
+            self.btnExe.clicked.connect(self.click_btnExe)
         Animate.opacity(self, self.btnExe, 0, 1, 1000, False)
 
         self.btnManage.clicked.connect(self.click_btnManage)
         self.btnGet.clicked.connect(self.click_btnGet)
-        self.btnExe.clicked.connect(self.click_btnExe)
+
+        
+    def click_btnQuitProg(self):
+        quit("\nQUIT\n")
+
+    def click_btnSecret(self):
+        STATIC(secret=True)
 
     def click_btnManage(self):
         Animate.opacity(self, self.btnManage)
+        # uic.loadUi(self.fileLocationPath+"/resources/ManageChannels.ui", self)
         uic.loadUi("resources/ManageChannels.ui", self)
 
         self.ChannelList.setPlainText(getChannelNames(self.channel_list))
@@ -146,23 +172,46 @@ class UI(QMainWindow):
             self.labelError.setStyleSheet("color: rgb(0, 255, 100);")
 
     def click_btnReturn(self):
-        Animate.opacity(self, self.btnRemove)
+        Animate.opacity(self, self.btnReturn)
+        # uic.loadUi(self.fileLocationPath+"/resources/menu.ui", self)
         uic.loadUi("resources/menu.ui", self)
+        self.btnQuitProg.clicked.connect(self.click_btnQuitProg)
+        self.btnSecret.clicked.connect(self.click_btnSecret)
 
         self.btnManage.clicked.connect(self.click_btnManage)
         self.btnGet.clicked.connect(self.click_btnGet)
         self.btnExe.clicked.connect(self.click_btnExe)
 
+        # if os.path.isfile(self.fileLocationPath+"/vLinks_targeted.json") == False:
+        if os.path.isfile("data/vLinks_targeted.json") == False:
+            self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 100), stop:1 rgba(23, 17, 80, 100)); border-radius: 20px; color: rgb(123, 105, 213, 100);")
+        else:
+            self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189), stop:1 rgba(23, 17, 80)); border-radius: 20px; color: rgb(123, 105, 213);")
+
     def click_btnGet(self):
         Animate.opacity(self, self.btnGet)
-        videoLinks = STATIC(getVids=True, validateChannel=False)
-        jsonStore("vLinks_all.json", videoLinks)
-        videoLinks = ListProcessing(videoLinks, 3)
-        jsonStore("vLinks.json", videoLinks)
+        try:
+            videoLinks = STATIC(getVids=True, validateChannel=False, channelList=self.channel_list)
+            if videoLinks == -1:
+                return
+                
+            # jsonStore(self.fileLocationPath+"/vLinks_all.json", videoLinks)
+            jsonStore("data/vLinks_all.json", videoLinks)
+            videoLinks = ListProcessing(videoLinks, 3)
+            # jsonStore(self.fileLocationPath+"/vLinks_targeted.json", videoLinks)
+            jsonStore("data/vLinks_targeted.json", videoLinks)
+        except:
+            pass
+
+        # if os.path.isfile(self.fileLocationPath+"/vLinks_targeted.json") == False:
+        if os.path.isfile("data/vLinks_targeted.json") == False:
+            self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 100), stop:1 rgba(23, 17, 80, 100)); border-radius: 20px; color: rgb(123, 105, 213, 100);")
+        else:
+            self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189), stop:1 rgba(23, 17, 80)); border-radius: 20px; color: rgb(123, 105, 213);")
     
     def click_btnExe(self):
         Animate.opacity(self, self.btnExe)
-        STATIC(getVids=True, validateChannel=False)
+        # STATIC(getVids=True, validateChannel=False)
     
     def anim_loading(self):
 

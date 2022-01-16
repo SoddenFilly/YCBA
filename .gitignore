@@ -1,4 +1,5 @@
-__pycashe__
+__pycache__
 .git
 dist
 build
+*.json

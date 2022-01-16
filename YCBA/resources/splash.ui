@@ -190,11 +190,48 @@ background-color: qradialgradient(spread:pad, cx:0.495, cy:0.5, radius:1.797, fx
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
+      <widget class="QPushButton" name="btnSecret">
+       <property name="geometry">
+        <rect>
+         <x>480</x>
+         <y>350</y>
+         <width>151</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(96, 75, 150);
+border-radius: 2px;
+background-color: rgb(0,0,0,0);</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnQuitProg">
+       <property name="geometry">
+        <rect>
+         <x>620</x>
+         <y>10</y>
+         <width>21</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 200), stop:1 rgba(23, 17, 80, 200));
+	border-radius: 10px;
+	color: rgb(123, 105, 213, 200);
+}</string>
+       </property>
+       <property name="text">
+        <string>X</string>
+       </property>
+      </widget>
       <zorder>frame_2</zorder>
       <zorder>titleLabel</zorder>
       <zorder>progressBar</zorder>
       <zorder>loadingLabel</zorder>
       <zorder>creditLabel</zorder>
+      <zorder>btnSecret</zorder>
+      <zorder>btnQuitProg</zorder>
      </widget>
     </item>
    </layout>

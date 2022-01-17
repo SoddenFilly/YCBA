@@ -1,8 +1,8 @@
 __pycache__
 .git
-.spec
 dist
 build
+*.spec
 *.json
 data/*.json
 YCBA/data/*.json

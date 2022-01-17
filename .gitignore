@@ -4,3 +4,4 @@ dist
 build
 *.json
 data/*.json
+YCBA/data/*.json

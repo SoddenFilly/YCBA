@@ -4,3 +4,4 @@ dist
 build
 *.json
 **/*.json
+data/*.json

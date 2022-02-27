@@ -1,0 +1,2 @@
+hideConsole-(problematic when using VSCode)--:False
+skipLoadScreen-------------------------------:True

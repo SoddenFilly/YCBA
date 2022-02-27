@@ -1,22 +1,21 @@
-import win32gui, win32con
-
-hide = win32gui.GetForegroundWindow()
-win32gui.ShowWindow(hide, win32con.SW_HIDE)
-
-from PyQt5.QtWidgets import * 
-from PyQt5 import QtCore, QtGui, uic, QtTest
-from PyQt5.QtGui import * 
-from PyQt5.QtCore import * 
-
+import win32gui, win32con # Provides access to much of the Win32 API etc
 import sys
 import time
 import random
 import json
 import os
 
-from YCBA_webScrape import STATIC
-from YCBA_webScrape import ListProcessing
-# from YCBA_RR import STATIC
+# For GUI
+from PyQt5.QtWidgets import * 
+from PyQt5 import QtCore, QtGui, uic, QtTest
+from PyQt5.QtGui import * 
+from PyQt5.QtCore import *
+
+from YCBA_webScrape import STATIC as STATIC_WS, ListProcessing
+from YCBA_CWriteBot import STATIC as STATIC_BT
+
+with open("debugSettings.txt", "r") as text:
+        debugSettings = text.readlines()
 
 class Animate:
     def __init__(self):
@@ -71,9 +70,9 @@ def getChannelNames(channel_list):
         print(string)
     return string[2:]
 
-class UI(QMainWindow):
+class StartupScene(QMainWindow):
     def __init__(self):
-        super(UI,self).__init__()
+        super(StartupScene, self).__init__()
 
         self.channel_list = ["EddievanderMeer", "monoman", "PaulDavids"]#, "AKSTARENG", "SteveTerreberry", "PirateCrabUK", "CharlesBerthoud"]
 
@@ -96,10 +95,60 @@ class UI(QMainWindow):
         self.btnSecret.clicked.connect(self.click_btnSecret)
         Animate.position(self, QPoint(0, -20), 3000, self.titleLabel)
 
+    def click_btnQuitProg(self):
+        sys.exit()
+
+    def click_btnSecret(self):
+        STATIC_WS(secret=True)
+
+    def anim_loading(self):
+
+        ranges = [[0,0],[0,0],[0,0],[0,0],[0,0]]
+        cap = 30
+
+        for i in range(5):
+            target = random.randint(10 + ranges[i][0], cap + ranges[i][1])
+            duration = random.randint(1000, 3000)
+
+            if target > 100:
+                target = 100
+
+            Animate.value(self, target, duration, self.progressBar)
+
+            if target == 100:
+                QtTest.QTest.qWait(1500)
+                break
+
+            try:
+                ranges[i+1][0] = target
+                cap = cap + ranges[i][1]
+                ranges[i+1][1] = cap
+                # print(target, cap)
+            except:
+                pass
+
+class MainScene(QMainWindow):
+    def __init__(self):
+        super(MainScene, self).__init__()
+
+        self.channel_list = ["monoman"] #, "EddievanderMeer", "PaulDavids"]#, "AKSTARENG", "SteveTerreberry", "PirateCrabUK", "CharlesBerthoud"]
+
+        self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+
+        self.show()
+
+        self.fileLocationPath = os.path.dirname(os.path.realpath(__file__))
+        
         # uic.loadUi(self.fileLocationPath+"/resources/menu.ui", self)
         uic.loadUi("resources/menu.ui", self)
         self.btnQuitProg.clicked.connect(self.click_btnQuitProg)
         self.btnSecret.clicked.connect(self.click_btnSecret)
+
+        self.frame_3.hide()
+        self.btnExeCancel.hide()
+        self.btnExeConfirm.hide()
+
         self.btnManage.setStyleSheet("QPushButton { background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 0), stop:1 rgba(23, 17, 80, 0)); border-radius: 20px; color: rgb(123, 105, 213, 0); }")
         self.btnGet.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 0), stop:1 rgba(23, 17, 80, 0)); border-radius: 20px; color: rgb(123, 105, 213, 0);")
         self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 0), stop:1 rgba(23, 17, 80, 0)); border-radius: 20px; color: rgb(123, 105, 213, 0);")
@@ -126,12 +175,21 @@ class UI(QMainWindow):
         self.btnManage.clicked.connect(self.click_btnManage)
         self.btnGet.clicked.connect(self.click_btnGet)
 
+        self.btnStatistics.clicked.connect(self.click_btnStatistics)
+        self.btnSettings.clicked.connect(self.click_btnSettings)
+
+    def click_btnSettings(self):
+        Animate.opacity(self, self.btnSettings)
+        # UIWindow = UI()
+
+    def click_btnStatistics(self):
+        Animate.opacity(self, self.btnStatistics)
         
     def click_btnQuitProg(self):
-        quit("\nQUIT\n")
+        sys.exit()
 
     def click_btnSecret(self):
-        STATIC(secret=True)
+        STATIC_WS(secret=True)
 
     def click_btnManage(self):
         Animate.opacity(self, self.btnManage)
@@ -158,11 +216,10 @@ class UI(QMainWindow):
             self.channel_list.remove(self.fieldChannel.text())
             self.ChannelList.setPlainText(getChannelNames(self.channel_list))
 
-    
     def checkIfChannelExists(self):
         print("Checking...")
         # print(self.fieldChannel.text())
-        isValid = STATIC(channelList=[self.fieldChannel.text()], getVids=False, validateChannel=True)
+        isValid = STATIC_WS(channelList=[self.fieldChannel.text()], getVids=False, validateChannel=True)
         # print(isValid)
         if isValid == False:
             self.labelError.setText("This channel name is not Valid")
@@ -178,20 +235,27 @@ class UI(QMainWindow):
         self.btnQuitProg.clicked.connect(self.click_btnQuitProg)
         self.btnSecret.clicked.connect(self.click_btnSecret)
 
+        self.frame_3.hide()
+        self.btnExeCancel.hide()
+        self.btnExeConfirm.hide()
+
         self.btnManage.clicked.connect(self.click_btnManage)
         self.btnGet.clicked.connect(self.click_btnGet)
-        self.btnExe.clicked.connect(self.click_btnExe)
+
+        self.btnStatistics.clicked.connect(self.click_btnStatistics)
+        self.btnSettings.clicked.connect(self.click_btnSettings)
 
         # if os.path.isfile(self.fileLocationPath+"/vLinks_targeted.json") == False:
         if os.path.isfile("data/vLinks_targeted.json") == False:
             self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 100), stop:1 rgba(23, 17, 80, 100)); border-radius: 20px; color: rgb(123, 105, 213, 100);")
         else:
             self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189), stop:1 rgba(23, 17, 80)); border-radius: 20px; color: rgb(123, 105, 213);")
+            self.btnExe.clicked.connect(self.click_btnExe)
 
     def click_btnGet(self):
         Animate.opacity(self, self.btnGet)
         try:
-            videoLinks = STATIC(getVids=True, validateChannel=False, channelList=self.channel_list)
+            videoLinks = STATIC_WS(getVids=True, validateChannel=False, channelList=self.channel_list)
             if videoLinks == -1:
                 return
                 
@@ -208,10 +272,29 @@ class UI(QMainWindow):
             self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 100), stop:1 rgba(23, 17, 80, 100)); border-radius: 20px; color: rgb(123, 105, 213, 100);")
         else:
             self.btnExe.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189), stop:1 rgba(23, 17, 80)); border-radius: 20px; color: rgb(123, 105, 213);")
-    
+            self.btnExe.clicked.connect(self.click_btnExe)
+
     def click_btnExe(self):
         Animate.opacity(self, self.btnExe)
-        # STATIC(getVids=True, validateChannel=False)
+
+        self.frame_3.show()
+        self.btnExeCancel.show()
+        self.btnExeConfirm.show()
+
+        self.btnExeCancel.clicked.connect(self.click_btnExeCancel)
+        self.btnExeConfirm.clicked.connect(self.click_btnExeConfirm)
+
+    def click_btnExeCancel(self):
+        Animate.opacity(self, self.btnExeCancel)
+
+        self.frame_3.hide()
+        self.btnExeCancel.hide()
+        self.btnExeConfirm.hide()
+
+    def click_btnExeConfirm(self):
+        Animate.opacity(self, self.btnExeConfirm)
+
+
     
     def anim_loading(self):
 
@@ -239,8 +322,74 @@ class UI(QMainWindow):
             except:
                 pass
 
+# class StartupScene(QMainWindow):
+#     def __init__(self):
+#         super(StartupScene, self).__init__()
+
+#         self.channel_list = ["EddievanderMeer", "monoman", "PaulDavids"]#, "AKSTARENG", "SteveTerreberry", "PirateCrabUK", "CharlesBerthoud"]
+
+#         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
+#         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+
+#         self.show()
+
+#         self.fileLocationPath = os.path.dirname(os.path.realpath(__file__))
+        
+#         if os.path.isfile("debug.mode") == True:
+#             # uic.loadUi(self.fileLocationPath+"/resources/splash.ui", self)
+#             uic.loadUi("resources/splash.ui", self)
+#             self.btnQuitProg.clicked.connect(self.click_btnQuitProg)
+#             self.btnSecret.clicked.connect(self.click_btnSecret)
+#             self.anim_loading()
+
+#             # uic.loadUi(self.fileLocationPath+"/resources/splashToMenu.ui", self)
+#             uic.loadUi("resources/splashToMenu.ui", self)
+#             self.btnQuitProg.clicked.connect(self.click_btnQuitProg)
+#             self.btnSecret.clicked.connect(self.click_btnSecret)
+#             Animate.position(self, QPoint(0, -20), 3000, self.titleLabel)
+
+#     def click_btnQuitProg(self):
+#         quit("\nQUIT\n")
+
+#     def click_btnSecret(self):
+#         STATIC(secret=True)
+
+#     def anim_loading(self):
+
+#         ranges = [[0,0],[0,0],[0,0],[0,0],[0,0]]
+#         cap = 30
+
+#         for i in range(5):
+#             target = random.randint(10 + ranges[i][0], cap + ranges[i][1])
+#             duration = random.randint(1000, 3000)
+
+#             if target > 100:
+#                 target = 100
+
+#             Animate.value(self, target, duration, self.progressBar)
+
+#             if target == 100:
+#                 QtTest.QTest.qWait(1500)
+#                 break
+
+#             try:
+#                 ranges[i+1][0] = target
+#                 cap = cap + ranges[i][1]
+#                 ranges[i+1][1] = cap
+#                 # print(target, cap)
+#             except:
+#                 pass
+
 if __name__ == "__main__":
 
+    if "True" in debugSettings[0].split(":")[1]:
+        hide = win32gui.GetForegroundWindow()
+        win32gui.ShowWindow(hide, win32con.SW_HIDE)
+
     app = QApplication(sys.argv)
-    UIWindow = UI()
+
+    if debugSettings[1].split(":")[1] == "False":
+        GUIWindow = StartupScene()
+    GUIWindow = MainScene()
+
     app.exec_()

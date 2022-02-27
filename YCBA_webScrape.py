@@ -10,9 +10,36 @@ import random
 import time
 import os
 
-def FillText(text, typeSpeed, submitDelay):
+def FillText(text, typeSpeed, startDelay, submitDelay, keyboard=Controller_keyboard):
 
-    if isinstance(text, list):
+    time.sleep(0.1+startDelay)
+
+    if "\n" in text:
+        text = text.split("\n")[1:-1]
+        # print()
+        multiLine = True
+    else:
+        multiLine = False
+
+    if isinstance(text, list) and multiLine == True:
+        
+        for line in text:
+            for string in line:
+
+                # if string != text[0]:
+                #     keyboard.press(Key.tab)
+                #     keyboard.release(Key.tab)
+
+                string = list(string)
+                for i in range(0, len(string)):
+                    keyboard.press(string[i])
+                    keyboard.release(string[i])
+                    time.sleep(typeSpeed)
+
+            keyboard.press(Key.enter)
+            keyboard.release(Key.enter)
+
+    elif isinstance(text, list):
 
         for string in text:
 
@@ -34,9 +61,10 @@ def FillText(text, typeSpeed, submitDelay):
             time.sleep(typeSpeed)
     
     time.sleep(0.1+submitDelay)
-    keyboard.press(Key.enter)
-    keyboard.release(Key.enter)
-# FillText("", 0.001, 0.2)
+
+    if multiLine == False:
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
 
 def DriverInst(webdriverDir, headless):
     if headless == True:
@@ -158,8 +186,6 @@ def STATIC(getVids=False, validateChannel=False, channelList=["monoman"], secret
         driver = DriverInst(webdriverDir, False)
 
         driver.get(f"https://youtu.be/dQw4w9WgXcQ")
-
-
 
 if __name__ == "__main__":
 

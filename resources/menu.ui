@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>733</width>
+    <width>677</width>
     <height>400</height>
    </rect>
   </property>
@@ -163,7 +163,7 @@ color: rgb(123, 105, 213);</string>
         <string>EXECUTE</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnManage_2">
+      <widget class="QPushButton" name="btnStatistics">
        <property name="geometry">
         <rect>
          <x>80</x>
@@ -187,13 +187,13 @@ color: rgb(123, 105, 213);</string>
 }</string>
        </property>
        <property name="text">
-        <string/>
+        <string>Statistics</string>
        </property>
        <property name="flat">
         <bool>false</bool>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnManage_3">
+      <widget class="QPushButton" name="btnSettings">
        <property name="geometry">
         <rect>
          <x>480</x>
@@ -217,7 +217,7 @@ color: rgb(123, 105, 213);</string>
 }</string>
        </property>
        <property name="text">
-        <string/>
+        <string>Settings</string>
        </property>
        <property name="flat">
         <bool>false</bool>
@@ -257,25 +257,6 @@ color: rgb(123, 105, 213);</string>
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
-      <widget class="QLabel" name="label">
-       <property name="geometry">
-        <rect>
-         <x>90</x>
-         <y>160</y>
-         <width>71</width>
-         <height>71</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap>:/icons/icon_stats.png</pixmap>
-       </property>
-       <property name="scaledContents">
-        <bool>true</bool>
-       </property>
-      </widget>
       <widget class="QPushButton" name="btnSecret">
        <property name="geometry">
         <rect>
@@ -311,17 +292,119 @@ background-color: rgb(0,0,0,0);</string>
         <string>X</string>
        </property>
       </widget>
+      <widget class="QFrame" name="frame_3">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>100</y>
+         <width>451</width>
+         <height>181</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(24, 18, 85);
+background-color: qradialgradient(spread:pad, cx:0.495, cy:0.5, radius:1.797, fx:0.494632, fy:0.5, stop:0.21393 rgba(24, 18, 85, 255), stop:1 rgba(0, 0, 0, 255));</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QPushButton" name="btnExeConfirm">
+        <property name="geometry">
+         <rect>
+          <x>230</x>
+          <y>100</y>
+          <width>191</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Agency FB</family>
+          <pointsize>30</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 255), stop:1 rgba(23, 17, 80, 255));
+border-radius: 20px;
+color: rgb(123, 105, 213);</string>
+        </property>
+        <property name="text">
+         <string>EXECUTE</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnExeCancel">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>100</y>
+          <width>191</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Agency FB</family>
+          <pointsize>30</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: qlineargradient(spread:pad, x1:0.448, y1:0, x2:0.507, y2:1, stop:0 rgba(109, 93, 189, 255), stop:1 rgba(23, 17, 80, 255));
+border-radius: 20px;
+color: rgb(123, 105, 213);</string>
+        </property>
+        <property name="text">
+         <string>CANCEL</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="loadingLabel">
+        <property name="geometry">
+         <rect>
+          <x>130</x>
+          <y>40</y>
+          <width>191</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>8514oem</family>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(105, 81, 179);</string>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:544;&quot;&gt;ARE YOU SURE..?&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::AutoText</enum>
+        </property>
+        <property name="scaledContents">
+         <bool>false</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </widget>
       <zorder>frame_2</zorder>
       <zorder>titleLabel</zorder>
       <zorder>btnManage</zorder>
       <zorder>btnGet</zorder>
       <zorder>btnExe</zorder>
-      <zorder>btnManage_2</zorder>
-      <zorder>btnManage_3</zorder>
+      <zorder>btnStatistics</zorder>
+      <zorder>btnSettings</zorder>
       <zorder>creditLabel</zorder>
-      <zorder>label</zorder>
       <zorder>btnSecret</zorder>
       <zorder>btnQuitProg</zorder>
+      <zorder>frame_3</zorder>
      </widget>
     </item>
    </layout>

@@ -1,2 +1,3 @@
-hideConsole-(problematic when using VSCode)--:False
-skipLoadScreen-------------------------------:True
+hideConsole-------------:False : (problematic when using VSCode)
+skipLoadScreen----------:True
+submitComments----------:False

@@ -2,6 +2,7 @@ import win32gui, win32con # Provides access to much of the Win32 API etc
 import sys
 import time
 import random
+import threading
 import json
 import os
 
@@ -15,7 +16,7 @@ from YCBA_webScrape import STATIC as STATIC_WS, ListProcessing
 from YCBA_CWriteBot import STATIC as STATIC_BT
 
 with open("debugSettings.txt", "r") as text:
-        debugSettings = text.readlines()
+    debugSettings = text.readlines()
 
 class Animate:
     def __init__(self):
@@ -178,6 +179,8 @@ class MainScene(QMainWindow):
         self.btnStatistics.clicked.connect(self.click_btnStatistics)
         self.btnSettings.clicked.connect(self.click_btnSettings)
 
+        self.channelIsValidating = False
+
     def click_btnSettings(self):
         Animate.opacity(self, self.btnSettings)
         # UIWindow = UI()
@@ -199,7 +202,7 @@ class MainScene(QMainWindow):
         self.ChannelList.setPlainText(getChannelNames(self.channel_list))
         self.btnReturn.clicked.connect(self.click_btnReturn)
 
-        self.fieldChannel.textChanged.connect(self.checkIfChannelExists)
+        self.fieldChannel.textChanged.connect(lambda: self.startThread("a"))
 
         self.btnAdd.clicked.connect(self.addChannel)
         self.btnRemove.clicked.connect(self.removeChannel)
@@ -217,16 +220,57 @@ class MainScene(QMainWindow):
             self.ChannelList.setPlainText(getChannelNames(self.channel_list))
 
     def checkIfChannelExists(self):
-        print("Checking...")
-        # print(self.fieldChannel.text())
-        isValid = STATIC_WS(channelList=[self.fieldChannel.text()], getVids=False, validateChannel=True)
-        # print(isValid)
-        if isValid == False:
-            self.labelError.setText("This channel name is not Valid")
-            self.labelError.setStyleSheet("color: rgb(255, 0, 80);")
-        else:
-            self.labelError.setText("This channel name is Valid")
-            self.labelError.setStyleSheet("color: rgb(0, 255, 100);")
+
+        while True:
+            print("Checking...")
+            
+            self.channelIsValidLabel_text = "Checking channel validity..."
+            self.channelIsValidLabel_color = "color: rgb(220, 220, 220);"
+            self.labelError.setText(self.channelIsValidLabel_text)
+            self.labelError.setStyleSheet(self.channelIsValidLabel_color)
+            
+            # print(self.fieldChannel.text())
+            isValid = STATIC_WS(channelList=[self.fieldChannel.text()], getVids=False, validateChannel=True)
+            print(isValid)
+
+            print("ssss", self.channelIsValid_updated)
+            if self.channelIsValid_updated == False:
+                # self.channelIsValid_updated = True
+
+                if isValid == False:
+                    self.labelError.setText("This channel name is not Valid")
+                    self.labelError.setStyleSheet("color: rgb(255, 0, 80);")
+                else:
+                    self.labelError.setText("This channel name is Valid")
+                    self.labelError.setStyleSheet("color: rgb(0, 255, 100);")
+                
+                self.channelIsValidating = False
+
+                break
+            else:
+                self.channelIsValid_updated = False
+
+
+
+        # if isValid == False:
+        #     self.channelIsValidLabel_text = "This channel name is not Valid"
+        #     self.channelIsValidLabel_color = "color: rgb(255, 0, 80);"
+        # else:
+        #     self.channelIsValidLabel_text = "This channel name is Valid"
+        #     self.channelIsValidLabel_color = "color: rgb(0, 255, 100);"
+
+        # self.channelValid_LabelUpdate()
+
+
+    def channelValid_LabelUpdate(self):
+
+        # self.labelError.setText(self.channelIsValidLabel_text)
+        # self.labelError.setStyleSheet(self.channelIsValidLabel_color)
+
+        
+
+
+        pass
 
     def click_btnReturn(self):
         Animate.opacity(self, self.btnReturn)
@@ -294,8 +338,6 @@ class MainScene(QMainWindow):
     def click_btnExeConfirm(self):
         Animate.opacity(self, self.btnExeConfirm)
 
-
-    
     def anim_loading(self):
 
         ranges = [[0,0],[0,0],[0,0],[0,0],[0,0]]
@@ -321,6 +363,34 @@ class MainScene(QMainWindow):
                 # print(target, cap)
             except:
                 pass
+
+    def startThread(self, target):
+        # print("ddskhjbcjdshbcsda", target)
+        # for thread in threading.enumerate(): 
+        #     print(thread.ident)
+        # print(threading.get_ident())
+
+        thread = threading.Thread(target=self.checkIfChannelExists)
+
+        if self.channelIsValidating == False:
+            self.channelIsValidating = True
+            self.channelIsValid_updated = False
+
+            self.channelIsValidLabel_text = "Checking channel validity..."
+            self.channelIsValidLabel_color = "color: rgb(220, 220, 220);"
+
+            
+
+            thread.start()
+        
+        else:
+            print("still validating")
+            self.channelIsValid_updated = True
+
+            # thread.start()
+
+
+
 
 # class StartupScene(QMainWindow):
 #     def __init__(self):
@@ -382,13 +452,13 @@ class MainScene(QMainWindow):
 
 if __name__ == "__main__":
 
-    if "True" in debugSettings[0].split(":")[1]:
+    if "T" in debugSettings[0].split(":")[1]:
         hide = win32gui.GetForegroundWindow()
         win32gui.ShowWindow(hide, win32con.SW_HIDE)
 
     app = QApplication(sys.argv)
-
-    if debugSettings[1].split(":")[1] == "False":
+    print(debugSettings[1].split(":")[1])
+    if "F" in debugSettings[1].split(":")[1]:
         GUIWindow = StartupScene()
     GUIWindow = MainScene()
 

@@ -12,6 +12,9 @@ import os
 
 from YCBA_webScrape import FillText
 
+with open("debugSettings.txt", "r") as text:
+    debugSettings = text.readlines()
+
 def DriverInst(webdriverDir, headless):
     if headless == True:
         chrome_options = Options()
@@ -59,25 +62,61 @@ def STATIC(username, password, targetList):
 
     def postComments(targetList, keyboard):
         # pass
+        # driver.get(link)
+        # time.sleep(3)
+        # keyboard.press(Key.tab)
+        # keyboard.release(Key.tab)
+        # keyboard.press(Key.enter)
+        # keyboard.release(Key.enter)
+        # time.sleep(0.5)
+
+        first = True
+
         for link in targetList:
             driver.get(link)
             time.sleep(3)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.tab)
-            keyboard.press(Key.enter)
-            keyboard.release(Key.enter)
-            time.sleep(0.5)
+            if first == True:
+                keyboard.press(Key.tab)
+                keyboard.release(Key.tab)
+                keyboard.press(Key.enter)
+                keyboard.release(Key.enter)
+                first = False
+                
+            time.sleep(1)
+            # time.sleep(3)
+            
             keyboard.press(Key.page_down)
             keyboard.release(Key.page_down)
             
             time.sleep(1)
-            # elem = driver.find_elements_by_xpath("//*[@class='ytd-comment-simplebox-renderer' and @class='style-scope' and @id='simplebox-placeholder']")
-            elem = driver.find_element_by_xpath("//*[contains(text(), 'Commenting publicly as ')]").click()
-            # print(elem)
+            try:
+                elem = driver.find_element_by_xpath("//*[contains(text(), 'Commenting publicly as ')]")
+                print("sjdcjhbsdcsnmd c", elem)
+            except:
+                print("Vid already commented on")
+                elem = driver.find_element_by_xpath("//*[contains(text(), 'Add a comment…')]")
+                print("sjdcjhbsdcsnmd c2", elem)
+
+            elem.click()
 
             FillText(commentContent(), 0.01, 2, 0, keyboard)
 
-            time.sleep(400)
+            keyboard.press(Key.tab)
+            keyboard.release(Key.tab)
+            keyboard.press(Key.tab)
+            keyboard.release(Key.tab)
+            keyboard.press(Key.tab)
+            keyboard.release(Key.tab)
+            keyboard.press(Key.tab)
+            keyboard.release(Key.tab)
+
+            if "T" in debugSettings[2].split(":")[1]:
+                keyboard.press(Key.enter)
+                keyboard.release(Key.enter)
+
+            time.sleep(1)
+
+            # time.sleep(400)
 
     
     def commentContent():
@@ -87,6 +126,11 @@ def STATIC(username, password, targetList):
 HI hellop peicop/give sad bs
 NO bs *gogi* nneds perfo gonga
 -_- -   -       -            -
+"""
+
+        content = """*
+Hey check out my friend Jaydens youtube channel --> https
+He only has a few vids at the moment but they are all top notch
 """
         return content
     
